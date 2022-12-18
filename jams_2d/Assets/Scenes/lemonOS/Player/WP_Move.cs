@@ -5,8 +5,6 @@ using UnityEngine.InputSystem;
 
 public class WP_Move : PlayerMovement
 {
-    private bool top;
-    private bool side;
     private void Awake()
     {
         PlayerInputActions playerInputActions = new PlayerInputActions();
