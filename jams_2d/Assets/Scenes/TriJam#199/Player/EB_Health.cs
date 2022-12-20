@@ -8,4 +8,9 @@ public class EB_Health : HealthScript
     {
         Debug.Log("Die or something.");
     }
+    public void AddHealth(float healthAdd)
+    {
+        health += healthAdd;
+        Debug.Log(health);
+    }
 }
