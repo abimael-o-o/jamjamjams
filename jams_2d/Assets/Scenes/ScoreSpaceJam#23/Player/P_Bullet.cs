@@ -15,7 +15,7 @@ public class P_Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<HealthScript>().TakeDamage(damage);
-            Destroy(gameObject);
         }
+        Destroy(gameObject);
     }
 }

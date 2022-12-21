@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
         if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "PlayerSystem")
         {
             collision.gameObject.GetComponent<HealthScript>().TakeDamage(damage);
-            Destroy(gameObject);
         }
+        Destroy(gameObject);
     }
 }
