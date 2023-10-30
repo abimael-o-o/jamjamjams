@@ -1,0 +1,7 @@
+Btns.png
+size:64,16
+repeat:none
+PlayBtnDown
+bounds:32,2,28,12
+PlayBtnUp
+bounds:2,2,28,12

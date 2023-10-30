@@ -3,15 +3,16 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.mygdx.map.Scene01;
 public class Main extends Game {
 
 	public static Main INSTANCE;
-	Scene01 gameScreen;
 	OrthographicCamera camera;
 
 	public Main(){
 		INSTANCE = this;
 	}
+	
 	@Override
 	public void create () {
 		this.camera = new OrthographicCamera();
