@@ -57,12 +57,14 @@ public class Player extends ScreenAdapter{
         Texture walkTexture = new Texture("player/idle-Sheet.png");
         Texture upTexture = new Texture("player/idle-Sheet.png");
         Texture downTexture = new Texture("player/idle-Sheet.png");
+        Texture runTexture = new Texture("player/idle-Sheet.png");
 
         Animator anim = new Animator();
         animation = anim.AnimatorInit(idleTexture);
         walkAnimation = anim.AnimatorInit(walkTexture);
         upAnimation = anim.AnimatorInit(upTexture);
         downAnimation = anim.AnimatorInit(downTexture);
+        runAnimation = anim.AnimatorInit(runTexture);
     }
     
     public void Update(float deltaTime){

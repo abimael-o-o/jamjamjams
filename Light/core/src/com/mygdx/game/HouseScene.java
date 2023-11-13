@@ -27,6 +27,7 @@ import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.helpers.GameObject;
 import com.mygdx.game.map.MapConfigA;
+import com.mygdx.game.player.Player;
 
 public class HouseScene extends ScreenAdapter {
 
@@ -36,6 +37,7 @@ public class HouseScene extends ScreenAdapter {
 	ModelBatch modelBatch;
 	Environment environment;
 	Array<GameObject> instances;
+	Player player;
 	
 	btCollisionConfiguration collisionConfig;
 	btDispatcher dispatcher;
@@ -53,14 +55,11 @@ public class HouseScene extends ScreenAdapter {
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         
 		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(3f, 7f, 10f);
+		cam.position.set(0f, 2f, 0f);
 		cam.near = 1f;
 		cam.far = 300f;
 		cam.update();
-		
-		firstPersonCam = new FirstPersonCameraController(cam);
-		Gdx.input.setInputProcessor(firstPersonCam);
-        
+
 		collisionConfig = new btDefaultCollisionConfiguration();
 		dispatcher = new btCollisionDispatcher(collisionConfig);
 		broadphase = new btDbvtBroadphase();
@@ -69,17 +68,19 @@ public class HouseScene extends ScreenAdapter {
 		dynamicsWorld.setGravity(new Vector3(0, -10f, 0));
 		//Contact listener code goes here.
 		instances = new Array<GameObject>();
-
+		
 		//* Initialise Debugger -- Remove in production */
 		debugDrawer = new DebugDrawer();
-		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_DrawAabb);
+		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_DrawWireframe);
 		dynamicsWorld.setDebugDrawer(debugDrawer);
 		//* --- END */
         
-		Gdx.input.setCursorCatched(true); //Hide Cursor
-
         SpawnObjects();
-
+		player = new Player(cam);
+		instances.add(player.GetPlayerObj());
+		dynamicsWorld.addRigidBody(player.GetPlayerObj().body);
+		Gdx.input.setInputProcessor(player);
+		Gdx.input.setCursorCatched(true); //Hide Cursor
 	}
 
 	public void SpawnObjects () {
@@ -98,12 +99,12 @@ public class HouseScene extends ScreenAdapter {
 
 		
 	}
-
+	
 	@Override
 	public void render (float delta) {
 		dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
-		firstPersonCam.update();
 		UpdateScene();
+		player.update(); //Player inputs and updates
 		
 		Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);

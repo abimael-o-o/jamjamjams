@@ -1,9 +1,12 @@
 package com.mygdx.game.helpers;
 
+import static com.mygdx.game.helpers.Constants.KINEMATIC_FLAG;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.Collision;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody.btRigidBodyConstructionInfo;
@@ -18,23 +21,27 @@ public class GameObject extends ModelInstance implements Disposable{
 
     public GameObject(Model m, String n, btCollisionShape s, float mass, Vector3 origin, int cflag) {
         super(m, n);
-        
         if(s == null){
             this.shape = Bullet.obtainStaticNodeShape(m.nodes);
         } else this.shape = s;
         if(mass > 0f) shape.calculateLocalInertia(mass, localInertia);
         else localInertia.set(0, 0, 0);
-
+        
         this.constructionInfo = new btRigidBodyConstructionInfo(mass, null, shape, localInertia);
-
-
         this.body = new btRigidBody(constructionInfo);
         this.motionState = new ObjMotionState();
         motionState.transform = transform;
         body.setMotionState(motionState);
-        body.translate(origin);
+        BoundingBox bb = new BoundingBox();
+        model.calculateBoundingBox(bb);
+        Vector3 v = new Vector3();
+        bb.getCenter(v);
+        body.translate(v);
 
         body.setCollisionFlags(body.getCollisionFlags() | cflag);
+        if(cflag == KINEMATIC_FLAG){
+            body.setActivationState(Collision.DISABLE_DEACTIVATION);
+        }
 
     }
 
