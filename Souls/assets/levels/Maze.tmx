@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="2">
+ <tileset firstgid="1" source="Floor01-Sheet.tsx"/>
+ <tileset firstgid="13" source="floor00-Sheet.tsx"/>
+ <layer id="6" name="Level" width="50" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztz0EJAAAIADEb2L+tDXwK6gYX4CIAAOCPbNqk+7j0AgAAAACTCidbAUs=
+  </data>
+ </layer>
+ <objectgroup id="2" name="Objects"/>
+ <objectgroup id="3" name="Spawns">
+  <object id="1" name="PlayerSpawn" x="268" y="524">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
