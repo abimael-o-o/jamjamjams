@@ -4,7 +4,7 @@
  <tileset firstgid="13" source="floor00-Sheet.tsx"/>
  <layer id="6" name="Level" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztz0EJAAAIADEb2L+tDXwK6gYX4CIAAOCPbNqk+7j0AgAAAACTCidbAUs=
+   eJztz8EJgFAMRMFgCrD/buUXYBAv/sQZ2Pu+CAAA+I+zWCdVR6eWjP4dx4N1MaFhuWvIL0+9NLkDAAAAdnQB4YcBlA==
   </data>
  </layer>
  <objectgroup id="2" name="Objects">

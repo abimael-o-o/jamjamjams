@@ -19,7 +19,7 @@ import com.mygdx.helper.BodyHelper;
 public class Player extends ScreenAdapter{
     public Sprite sprite;
     public Vector2 position;
-    public float speed = .2f;
+    public float speed = 2f;
     //private float defaultSpeed;
     //private float runSpeed = .25f;
     private float stateTime; //For animations.
