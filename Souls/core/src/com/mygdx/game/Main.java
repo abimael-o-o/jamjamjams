@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class Main extends Game {
 
 	public static Main INSTANCE;
-	Scene01 gameScreen;
+	Overworld gameScreen;
 	OrthographicCamera camera;
 
 	public Main(){
@@ -17,6 +17,6 @@ public class Main extends Game {
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		setScreen(new Scene01(camera));
+		setScreen(new Overworld(camera));
 	}
 }

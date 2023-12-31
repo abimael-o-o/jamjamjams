@@ -27,6 +27,7 @@ allprojects {
         aiVersion = '1.8.2'
         gdxControllersVersion = '2.2.1'
         gltfVersion = '-SNAPSHOT'
+        visuiVersion = '1.5.1'
     }
 
     repositories {
@@ -50,7 +51,7 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
-        
+        api "com.kotcrab.vis:vis-ui:$visuiVersion"
     }
 }
 
@@ -63,5 +64,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
         api "com.github.mgsx-dev.gdx-gltf:gltf:$gltfVersion"
+        api "com.kotcrab.vis:vis-ui:$visuiVersion"
     }
 }

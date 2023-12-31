@@ -18,6 +18,7 @@ public class GameObject extends ModelInstance implements Disposable{
     public final btCollisionShape shape;
     private static Vector3 localInertia = new Vector3();
     public final btRigidBody.btRigidBodyConstructionInfo constructionInfo;
+    BoundingBox boundingBox;
 
     public GameObject(Model m, String n, btCollisionShape s, float mass, Vector3 origin, int cflag) {
         super(m, n);
@@ -34,6 +35,8 @@ public class GameObject extends ModelInstance implements Disposable{
         body.setMotionState(motionState);
         BoundingBox bb = new BoundingBox();
         model.calculateBoundingBox(bb);
+        boundingBox = bb;
+
         Vector3 v = new Vector3();
         bb.getCenter(v);
         body.translate(v);
@@ -42,7 +45,6 @@ public class GameObject extends ModelInstance implements Disposable{
         if(cflag == KINEMATIC_FLAG){
             body.setActivationState(Collision.DISABLE_DEACTIVATION);
         }
-
     }
 
 
@@ -53,5 +55,7 @@ public class GameObject extends ModelInstance implements Disposable{
         constructionInfo.dispose();
     }
     
-    
+    public BoundingBox getBounds() {
+        return boundingBox.mul(transform);
+    }
 }

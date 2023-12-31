@@ -8,18 +8,18 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Scene01;
+import com.mygdx.game.Overworld;
 
 public class TileMapHelper {
     private TiledMap tiledMap;
-    private Scene01 gameScreen;
+    private Overworld gameScreen;
 
-    public TileMapHelper(Scene01 gameScreen){
+    public TileMapHelper(Overworld gameScreen){
         this.gameScreen = gameScreen;
     }
     
     public OrthogonalTiledMapRenderer setuMap(){
-        tiledMap = new TmxMapLoader().load("levels/Maze.tmx");
+        tiledMap = new TmxMapLoader().load("levels/Overworld.tmx");
         parseMapObjects(tiledMap.getLayers().get("Objects").getObjects());
         return new OrthogonalTiledMapRenderer(tiledMap);
     }

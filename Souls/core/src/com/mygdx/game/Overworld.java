@@ -2,7 +2,9 @@ package com.mygdx.game;
 
 import static com.mygdx.helper.Constants.PPM;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,7 +21,7 @@ import com.mygdx.player.Player;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
-public class Scene01 extends ScreenAdapter{
+public class Overworld extends ScreenAdapter{
 
     SpriteBatch batch;
 	Player player;
@@ -36,7 +38,7 @@ public class Scene01 extends ScreenAdapter{
     private PointLight pointLight;
 
     //Constructs the game scene.
-    public Scene01(OrthographicCamera camera){
+    public Overworld(OrthographicCamera camera){
         this. camera = camera;
         this.world = new World(new Vector2(0,0), false); //World y = gravity
         this.box2dDebugRenderer = new Box2DDebugRenderer(); //Set collision box debug
@@ -70,12 +72,14 @@ public class Scene01 extends ScreenAdapter{
         batch.setProjectionMatrix(camera.combined);
         rayHandler.setCombinedMatrix(camera);
         orthogonalTiledMapRenderer.setView(camera);
-        //System.out.println(Gdx.graphics.getFramesPerSecond());
+        
+        //* -- Exit Game With ESC KEY - USED IN DEBUG ONLY */
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) System.exit(0);
     }
 
     public void cameraUpdate(){
         Vector3 targetPos = player.GetPlayerPosition().add(cameraOffset);
-        camera.position.lerp(targetPos, .1f);
+        camera.position.set(targetPos);
         pointLight.setPosition(player.position);
         camera.update();
     }

@@ -37,7 +37,7 @@ public class Player extends ScreenAdapter{
     public Player(World world, Vector2 p){
         this.batch = new SpriteBatch();
         this.position = p;
-        this.body = new BodyHelper().createBody(position.x, position.y, 32, 32, false, world, "Player", 100);
+        this.body = new BodyHelper().createBody(position.x, position.y, 16, 16, false, world, "Player", 100);
         body.setLinearDamping(5f);
         
         AnimationSetup();
@@ -117,7 +117,7 @@ public class Player extends ScreenAdapter{
         TextureRegion currentFrame = anim.getKeyFrame(stateTime, true);
         sprite = new Sprite(currentFrame);
         sprite.flip(isFlipx, false);
-        sprite.setPosition(position.x  - 16, position.y - 16); //Adjust sprite position.
+        sprite.setPosition(position.x - 16, position.y - 16); //Adjust sprite position.
         sprite.draw(batch);
     }
 
