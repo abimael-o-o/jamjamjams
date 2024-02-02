@@ -13,12 +13,16 @@ public class Health {
 
     public void TakeDamage(int damage){
         Health -= damage;
-        if(Health <=0 ){
+        if(Health <= 0 ){
             IsDead = true;
         }
     }
 
     public boolean DeathState(){
         return IsDead;
+    }
+
+    public int GetHealth(){
+        return Health;
     }
 }

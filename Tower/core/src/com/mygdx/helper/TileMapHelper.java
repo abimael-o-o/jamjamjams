@@ -21,6 +21,7 @@ public class TileMapHelper {
     public OrthogonalTiledMapRenderer setuMap(){
         tiledMap = new TmxMapLoader().load("levels/Maze.tmx");
         parseMapObjects(tiledMap.getLayers().get("Objects").getObjects());
+        parseEnemyObjects(tiledMap.getLayers().get("EnemySpawns").getObjects());
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
 
@@ -31,6 +32,18 @@ public class TileMapHelper {
         float x = rectangleMapObject.getRectangle().getX();
         float y = rectangleMapObject.getRectangle().getY();
         return new Vector2(x, y);
+    }
+    public void parseEnemyObjects(MapObjects mapObjects){
+        for (MapObject mapObject : mapObjects) {
+            if(mapObject instanceof RectangleMapObject){
+                RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+
+                float x = rectangleMapObject.getRectangle().getX();
+                float y = rectangleMapObject.getRectangle().getY();
+
+                gameScreen.createEnemiesInWorld(new Vector2(x,y), mapObject.getName());
+            }
+        }
     }
 
     public void parseMapObjects(MapObjects mapObjects){

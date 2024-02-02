@@ -8,8 +8,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.helpers.GameObject;
 
 public class CameraInputs extends GestureDetector{
 
@@ -61,7 +59,6 @@ public class CameraInputs extends GestureDetector{
      private float startX, startY;
      private final Vector3 tmpV1 = new Vector3();
      private final Vector3 tmpV2 = new Vector3();
-     private Array<GameObject> instances;
  
      protected static class CameraGestureListener extends GestureAdapter {
          public CameraInputs controller;
@@ -110,16 +107,15 @@ public class CameraInputs extends GestureDetector{
  
      protected final CameraGestureListener gestureListener;
  
-     protected CameraInputs(final CameraGestureListener gestureListener, final Camera camera, final Array<GameObject> inst) {
+     protected CameraInputs(final CameraGestureListener gestureListener, final Camera camera) {
          super(gestureListener);
          this.gestureListener = gestureListener;
          this.gestureListener.controller = this;
          this.camera = camera;
-         this.instances = inst;
      }
  
-     public CameraInputs (final Camera camera, final Array<GameObject> inst) {
-         this(new CameraGestureListener(), camera, inst);
+     public CameraInputs (final Camera camera) {
+         this(new CameraGestureListener(), camera);
      }
  
      public void update () {
@@ -137,9 +133,6 @@ public class CameraInputs extends GestureDetector{
              }
              if (autoUpdate) camera.update();
          }
-     }
-     public void addInstances(Array<GameObject> inst){
-        instances = inst;
      }
 
      private int touched;
@@ -166,6 +159,7 @@ public class CameraInputs extends GestureDetector{
          if (button == this.button){
             //* Detection of touching an instance should go here... */
             this.button = -1;
+            
          }
          return super.touchUp(screenX, screenY, pointer, button) || activatePressed;
      }

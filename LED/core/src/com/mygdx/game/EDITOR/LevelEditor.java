@@ -77,7 +77,7 @@ public class LevelEditor extends ScreenAdapter{
 		cam.far = 300f;
 		cam.update();
         
-        camController = new CameraInputs(cam, instances); //* Controls movement for camera and selecting objects. */
+        camController = new CameraInputs(cam); //* Controls movement for camera and selecting objects. */
 		
 		//* UI and input processors setup */
 		VisUI.load(SkinScale.X1);
@@ -148,7 +148,6 @@ public class LevelEditor extends ScreenAdapter{
 	public void SetInstances(GameObject object){
 		instances.add(object);
 		dynamicsWorld.addRigidBody(object.body);
-		camController.addInstances(instances); //Adds copy of instances to camera work on later
 	}
 	
 }

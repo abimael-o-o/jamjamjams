@@ -2,7 +2,6 @@ package com.mygdx.player;
 import static com.mygdx.helper.Constants.PPM;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,18 +15,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.helper.Animator;
 import com.mygdx.helper.BodyHelper;
 
-public class Player extends ScreenAdapter{
+public class Player {
     public Sprite sprite;
     public Vector2 position;
     public float speed = 2f;
-    //private float defaultSpeed;
-    //private float runSpeed = .25f;
     private float stateTime; //For animations.
 
     boolean shouldFlip = false;
 
     Body body;
-    SpriteBatch batch;
+    public SpriteBatch batch;
 
     Animation<TextureRegion> idleAnimation;
     Animation<TextureRegion> walkAnimation;
@@ -81,7 +78,7 @@ public class Player extends ScreenAdapter{
         body.setLinearVelocity(horizontalForce, verticalForce);
         //Set the sprite position to the physics body.
         position = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM);
-
+        
         //Set animations based on movement.
         if(body.getLinearVelocity().x != 0) animationHandler(walkAnimation, shouldFlip);
         else if(body.getLinearVelocity().y > 0 ){
@@ -96,16 +93,20 @@ public class Player extends ScreenAdapter{
     }
     
     private void Flip(){
-        if(shouldFlip && body.getLinearVelocity().x > 0f || !shouldFlip && body.getLinearVelocity().x < 0f){
-            shouldFlip = !shouldFlip;
-        }
+        //* TODO FIX ISSUE FLIPPLING WHEN COLLIDING */
+        
+        // if((shouldFlip && body.getLinearVelocity().x > 0f) || (!shouldFlip && body.getLinearVelocity().x < 0f)){
+        //     shouldFlip = !shouldFlip;
+        // }
+        if(body.getLinearVelocity().x > 0.1f) shouldFlip = false;
+        else shouldFlip = true;
     }
 
     private void CheckDeathState(){
         BodyHelper ta = (BodyHelper) body.getFixtureList().first().getUserData();
-        if(ta.healhtComponent.DeathState()){
-            System.out.println("Dead");
+        if(ta.healhtComponent.GetHealth() < 100){
         }
+        if(ta.healhtComponent.DeathState()) System.out.println("DEAD");
     }
 
     public void Draw(SpriteBatch batch){
@@ -121,13 +122,15 @@ public class Player extends ScreenAdapter{
         sprite.draw(batch);
     }
 
-    @Override
-    public void dispose(){
-        batch.dispose();
-    }
-
     public Vector3 GetPlayerPosition(){
         return new Vector3(position.x, position.y, 0);
     }
- 
+    
+    public Vector2 GetPlayerPositionBody(){
+        return new Vector2(position.x, position.y);
+    }
+
+    public Body GetPlayerBody(){
+        return body;
+    }
 }

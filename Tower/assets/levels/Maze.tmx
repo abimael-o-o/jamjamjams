@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="3">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="7">
  <tileset firstgid="1" source="Floor01-Sheet.tsx"/>
  <tileset firstgid="13" source="floor00-Sheet.tsx"/>
  <layer id="6" name="Level" width="50" height="40">
   <data encoding="base64" compression="zlib">
-   eJztz8EJgFAMRMFgCrD/buUXYBAv/sQZ2Pu+CAAA+I+zWCdVR6eWjP4dx4N1MaFhuWvIL0+9NLkDAAAAdnQB4YcBlA==
+   eJzt0sENwCAMBEEL3lH67xZRACTfgxnpCljZVQAAcI93syS7jqSWXvkd7cdSPB9LsbrD/LekjunkjrS/AgAA4A4D++ICIg==
   </data>
  </layer>
  <objectgroup id="2" name="Objects">
@@ -14,6 +14,11 @@
  </objectgroup>
  <objectgroup id="3" name="Spawns">
   <object id="1" name="PlayerSpawn" x="268" y="524">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="EnemySpawns">
+  <object id="5" name="EnemyA" x="291.333" y="642.667">
    <point/>
   </object>
  </objectgroup>

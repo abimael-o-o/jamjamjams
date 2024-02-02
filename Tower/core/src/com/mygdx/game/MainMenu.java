@@ -70,6 +70,7 @@ public class MainMenu extends ScreenAdapter{
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                     main.setScreen(new Scene01(camera));
+                    dispose();
             }
         });
     }
@@ -88,6 +89,6 @@ public class MainMenu extends ScreenAdapter{
 
     @Override
     public void dispose(){
-        this.dispose();
+        stage.dispose();
     }
 }
