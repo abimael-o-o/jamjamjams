@@ -12,6 +12,8 @@ public class DesktopLauncher {
 		Monitor monitor = Lwjgl3ApplicationConfiguration.getPrimaryMonitor();
 		DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode(monitor);
 		config.setFullscreenMode(displayMode);
+		//config.setWindowedMode(1200, 800);
+
 		config.setTitle("V0.01");
 		new Lwjgl3Application(new Main(), config);
 	}

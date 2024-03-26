@@ -12,6 +12,6 @@ public class Main extends Game {
 	
 	@Override
 	public void create () {
-		setScreen(new LevelEditor());
+		setScreen(new HouseScene());
 	}
 }

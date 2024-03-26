@@ -35,7 +35,7 @@ public class Commands extends VisWindow{
         TableUtils.setSpacingDefaults(this);
         addNormalWidgets();
         pack();
-        setPosition(134, 180);
+        setPosition(80, 100);
 		levelEditor = editor;
     }
 

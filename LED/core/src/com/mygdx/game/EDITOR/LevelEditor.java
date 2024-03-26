@@ -1,17 +1,21 @@
 package com.mygdx.game.EDITOR;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
@@ -48,6 +52,11 @@ public class LevelEditor extends ScreenAdapter{
 	btDynamicsWorld dynamicsWorld;
 	btConstraintSolver constraintSolver;
 	DebugDrawer debugDrawer;
+
+	private Vector3 position = new Vector3();
+	private int selected = -1, selecting = -1;
+	private Material selectionMaterial;
+	private Material originalMaterial;
 
 	public LevelEditor(){
 		Bullet.init();
@@ -89,6 +98,7 @@ public class LevelEditor extends ScreenAdapter{
 		InputMultiplexer multiplexer = new InputMultiplexer();
 		multiplexer.addProcessor(stage);
 		multiplexer.addProcessor(camController);
+		multiplexer.addProcessor(this.new SelectObjects());
 		Gdx.input.setInputProcessor(multiplexer);
 
 		//* Initialise Debugger -- Remove in production */
@@ -96,6 +106,10 @@ public class LevelEditor extends ScreenAdapter{
 		debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_DrawWireframe);
 		dynamicsWorld.setDebugDrawer(debugDrawer);
 		//* --- END */
+
+		selectionMaterial = new Material();
+		selectionMaterial.set(ColorAttribute.createDiffuse(Color.ORANGE));
+		originalMaterial = new Material();
 	}
 
 	@Override
@@ -135,6 +149,7 @@ public class LevelEditor extends ScreenAdapter{
 
 	@Override
 	public void resize(int width, int height) {
+		//*TODO*/
 	}
 
 	@Override
@@ -148,6 +163,79 @@ public class LevelEditor extends ScreenAdapter{
 	public void SetInstances(GameObject object){
 		instances.add(object);
 		dynamicsWorld.addRigidBody(object.body);
+	}
+
+	public class SelectObjects extends InputAdapter{
+		@Override
+		public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+			selecting = getObject(screenX, screenY);
+			return selecting >= 0;
+		}
+
+		@Override
+		public boolean touchDragged (int screenX, int screenY, int pointer) {
+			if (selecting < 0) return false;
+			if (selected == selecting) {
+				Ray ray = cam.getPickRay(screenX, screenY);
+				final float distance = -ray.origin.y / ray.direction.y;
+				position.set(ray.direction).scl(distance).add(ray.origin);
+				instances.get(selected).transform.setTranslation(position);
+			}
+			return true;
+		}
+
+		@Override
+		public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+			if (selecting >= 0) {
+				if (selecting == getObject(screenX, screenY)) setSelected(selecting);
+				selecting = -1;
+				return true;
+			}
+			return false;
+		}
+
+		public void setSelected (int value) {
+			if (selected == value) return;
+			if (selected >= 0) {
+				Material mat = instances.get(selected).materials.get(0);
+				mat.clear();
+				mat.set(originalMaterial);
+			}
+			selected = value;
+			if (selected >= 0) {
+				Material mat = instances.get(selected).materials.get(0);
+				originalMaterial.clear();
+				originalMaterial.set(mat);
+				mat.clear();
+				mat.set(selectionMaterial);
+
+				//*TODO - Fix multiple windows opening when click on other instance.*/
+				//Set UI for editing information about the GameObject instance.
+				stage.addActor(new ObjectSetState(instances.get(selected)));
+			}
+		}
+
+		public int getObject (int screenX, int screenY) {
+			Ray ray = cam.getPickRay(screenX, screenY);
+			int result = -1;
+			float distance = -1;
+			for (int i = 0; i < instances.size; ++i) {
+				final GameObject instance = instances.get(i);
+				instance.transform.getTranslation(position);
+				position.add(instance.center);
+				final float len = ray.direction.dot(position.x-ray.origin.x, position.y-ray.origin.y, position.z-ray.origin.z);
+				if (len < 0f)
+					continue;
+				float dist2 = position.dst2(ray.origin.x+ray.direction.x*len, ray.origin.y+ray.direction.y*len, ray.origin.z+ray.direction.z*len);
+				if (distance >= 0f && dist2 > distance) 
+					continue;
+				if (dist2 <= instance.radius * instance.radius) {
+					result = i;
+					distance = dist2;
+				}
+			}
+			return result;
+		}
 	}
 	
 }

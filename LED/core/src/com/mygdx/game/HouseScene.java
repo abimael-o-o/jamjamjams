@@ -1,13 +1,19 @@
 package com.mygdx.game;
+import static com.mygdx.game.helpers.Constants.KINEMATIC_FLAG;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.assets.loaders.ModelLoader;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.math.Vector3;
@@ -25,8 +31,8 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.game.helpers.GameObject;
-import com.mygdx.game.map.MapConfigA;
 import com.mygdx.game.player.Player;
 
 public class HouseScene extends ScreenAdapter {
@@ -45,6 +51,15 @@ public class HouseScene extends ScreenAdapter {
 	btDynamicsWorld dynamicsWorld;
 	btConstraintSolver constraintSolver;
 	DebugDrawer debugDrawer;
+
+	//*FPS Code */
+	long lastTimeCounted;
+	private float sinceChange;
+	private float frameRate;
+	private BitmapFont font;
+	private SpriteBatch batch;
+
+	Vector3 playerPosDebug;
 	
 	public HouseScene () {
 		Bullet.init();
@@ -81,23 +96,56 @@ public class HouseScene extends ScreenAdapter {
 		dynamicsWorld.addRigidBody(player.GetPlayerObj().body);
 		Gdx.input.setInputProcessor(player);
 		Gdx.input.setCursorCatched(true); //Hide Cursor
+
+		//*FPS Code */
+		lastTimeCounted = TimeUtils.millis();
+        sinceChange = 0;
+        frameRate = Gdx.graphics.getFramesPerSecond();
+        font = new BitmapFont();
+		batch = new SpriteBatch();
+
+		//* Player Position Debug */
+		playerPosDebug = player.GetPlayerObj().body.getCenterOfMassPosition();
 	}
 
 	public void SpawnObjects () {
-		MapConfigA mapA = new MapConfigA();
-		Array<GameObject> configInstances = mapA.ReturnInstances();			
-		for (GameObject obj : configInstances) {
-			instances.add(obj);
-			dynamicsWorld.addRigidBody(obj.body);
-		}
+    	String pathA = "assets/mapConfig/";
+
+		ModelLoader<?> loader = new ObjLoader();
+		GameObject floor = new GameObject(loader.loadModel(Gdx.files.internal(pathA + "Floor.obj")), "Floor", 
+								null , 0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+        GameObject wall = new GameObject(loader.loadModel(Gdx.files.internal(pathA + "Wall.obj")), "Wall", 
+                                null , 0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+        GameObject stairs = new GameObject(loader.loadModel(Gdx.files.internal(pathA + "Stairs.obj")), "Stairs", 
+								null , 0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+		GameObject sWall = new GameObject(loader.loadModel(Gdx.files.internal(pathA + "sWall.obj")), "sWall", 
+								null , 0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+		//*Add all objects to the instance arr */	
+        instances.add(floor);
+        instances.add(wall);
+        instances.add(stairs);
+		instances.add(sWall);
+		dynamicsWorld.addRigidBody(floor.body);
+		dynamicsWorld.addRigidBody(sWall.body);
 	}
 
 	public void UpdateScene(){
 		//* Only used on Debug -- Remove in production */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) System.exit(0);
-		//* --- END */
 
-		
+		//FPS CODE ---
+		long delta = TimeUtils.timeSinceMillis(lastTimeCounted);
+        lastTimeCounted = TimeUtils.millis();
+
+        sinceChange += delta;
+        if(sinceChange >= 1000) {
+            sinceChange = 0;
+            frameRate = Gdx.graphics.getFramesPerSecond();
+        }
+		//* Player Position Debug */
+		playerPosDebug = player.GetPlayerObj().body.getCenterOfMassPosition();
+
+		//* --- END */
 	}
 	
 	@Override
@@ -118,6 +166,12 @@ public class HouseScene extends ScreenAdapter {
 		modelBatch.begin(cam);
 		modelBatch.render(instances, environment);
 		modelBatch.end();
+
+		//* 2D Stuff i.e UI and other */
+		batch.begin();
+		font.draw(batch, (int)frameRate + " fps", 30, Gdx.graphics.getHeight() - 30);
+		font.draw(batch, "Player Position: " + playerPosDebug , 30, Gdx.graphics.getHeight() - 900);
+		batch.end();
 	}
 
 	@Override
@@ -132,6 +186,9 @@ public class HouseScene extends ScreenAdapter {
 		dispatcher.dispose();
 		collisionConfig.dispose();
 		modelBatch.dispose();
+
+		font.dispose();
+        batch.dispose();
 	}
 
 	@Override

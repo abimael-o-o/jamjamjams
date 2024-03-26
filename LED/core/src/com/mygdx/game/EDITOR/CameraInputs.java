@@ -139,18 +139,24 @@ public class CameraInputs extends GestureDetector{
      private boolean multiTouch;
  
      @Override
-     public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-         touched |= (1 << pointer);
-         multiTouch = !MathUtils.isPowerOfTwo(touched);
-         if (multiTouch)
-             this.button = -1;
-         else if (this.button < 0 && (activateKey == 0 || activatePressed)) {
-             startX = screenX;
-             startY = screenY;
-             this.button = button;
-         }
-         return super.touchDown(screenX, screenY, pointer, button) || (activateKey == 0 || activatePressed);
-     }
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        touched |= (1 << pointer);
+        multiTouch = !MathUtils.isPowerOfTwo(touched);
+        if (multiTouch) {
+            this.button = -1;
+        } else if (this.button < 0 && (activateKey == 0 || activatePressed)) {
+            startX = screenX;
+            startY = screenY;
+            this.button = button;
+        }
+        boolean result = super.touchDown(screenX, screenY, pointer, button);
+        if (!result && (activateKey == 0 || activatePressed)) {
+            // If the event is not consumed by the GestureDetector and activateKey is pressed, pass it to the next processor
+            return false;
+        }
+        return true;
+    }
+
  
      @Override
      public boolean touchUp (int screenX, int screenY, int pointer, int button) {
