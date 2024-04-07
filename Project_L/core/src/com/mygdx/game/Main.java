@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import static com.mygdx.game.helpers.Constants.KINEMATIC_FLAG;
+import static com.mygdx.game.helpers.Constants.STATIC_FLAG;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -22,12 +23,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
-import com.badlogic.gdx.physics.bullet.collision.btBroadphaseInterface;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionConfiguration;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
-import com.badlogic.gdx.physics.bullet.collision.btDbvtBroadphase;
-import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
-import com.badlogic.gdx.physics.bullet.collision.btDispatcher;
+import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
@@ -40,6 +36,7 @@ import com.mygdx.game.helpers.GameObject;
 import com.mygdx.game.player.Player;
 
 public class Main extends ApplicationAdapter {
+	public static final Vector3 DEFAULT_GRAVITY = new Vector3(0, -9.81f, 0f);
 	PerspectiveCamera cam;
 	FirstPersonCameraController firstPersonCam;
 	CameraInputController camController;
@@ -63,6 +60,11 @@ public class Main extends ApplicationAdapter {
 	private SpriteBatch batch;
 
 	Vector3 playerPosDebug;
+
+	// Debug drawing ray casts
+	private final Vector3 lastRayFrom = new Vector3();
+	private final Vector3 lastRayTo = new Vector3();
+	private final Vector3 rayColor = new Vector3(1, 0, 1);
 	
 	@Override
 	public void create () {
@@ -84,7 +86,7 @@ public class Main extends ApplicationAdapter {
 		broadphase = new btDbvtBroadphase();
 		constraintSolver = new btSequentialImpulseConstraintSolver();
 		dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraintSolver, collisionConfig);
-		dynamicsWorld.setGravity(new Vector3(0, -10f, 0));
+		dynamicsWorld.setGravity(DEFAULT_GRAVITY);
 		//Contact listener code goes here.
 		instances = new Array<GameObject>();
 		
@@ -95,7 +97,7 @@ public class Main extends ApplicationAdapter {
 		//* --- END */
         
         SpawnObjects();
-		player = new Player(cam);
+		player = new Player(cam, this);
 		instances.add(player.GetPlayerObj());
 		dynamicsWorld.addRigidBody(player.GetPlayerObj().body);
 		Gdx.input.setInputProcessor(player);
@@ -113,15 +115,13 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public void UpdateScene(){
-		player.Update(); //Player inputs and updates
-
 		//* Only used on Debug -- Remove in production */
 		if(Gdx.input.isKeyJustPressed(Keys.ESCAPE)) System.exit(0);
-		
+
 		//FPS CODE ---
 		long delta = TimeUtils.timeSinceMillis(lastTimeCounted);
         lastTimeCounted = TimeUtils.millis();
-		
+
         sinceChange += delta;
         if(sinceChange >= 1000) {
 			sinceChange = 0;
@@ -131,14 +131,15 @@ public class Main extends ApplicationAdapter {
 		playerPosDebug = player.GetPlayerObj().body.getCenterOfMassPosition();
 		//* --- END */
 	}
-	
+
 	@Override
 	public void render () {
 		final float delta = Math.min(1f / 30f, Gdx.graphics.getDeltaTime());
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
 
+		player.Update(delta); //Player inputs and updates
 		UpdateScene();
-		
+
 		Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
@@ -168,26 +169,42 @@ public class Main extends ApplicationAdapter {
 		G3dModelLoader g3dLoader = new G3dModelLoader(new JsonReader());
 
         Model planeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "floor.g3dj"));
-        GameObject plane = new GameObject(planeModel, "floor",null, 
-                        0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+        GameObject plane = new GameObject(planeModel, "floor",null,0f, KINEMATIC_FLAG);
 
 		Model treeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "tree.g3dj"));
-		GameObject tree = new GameObject(treeModel, "tree",null, 
-						0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+		GameObject tree = new GameObject(treeModel, "tree",null,0f, KINEMATIC_FLAG);
 
 
 		Model columnModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "column.g3dj"));
-		GameObject column = new GameObject(columnModel, "column",null, 
-						0f, new Vector3(0,0,0), KINEMATIC_FLAG);
+		GameObject column = new GameObject(columnModel, "column",null,0f, KINEMATIC_FLAG);
 
 		instances.add(plane);
 		instances.add(tree);
 		instances.add(column);
-		dynamicsWorld.addRigidBody(plane.GetBody());
-		dynamicsWorld.addRigidBody(tree.GetBody());
-		dynamicsWorld.addRigidBody(column.GetBody());
+		dynamicsWorld.addRigidBody(plane.body);
+		dynamicsWorld.addRigidBody(tree.body);
+		dynamicsWorld.addRigidBody(column.body);
 	}
+	/**
+	 * Perform a raycast in the physics world.
+	 * @param from the starting position (origin) of the ray
+	 * @param to the end position of the ray
+	 * @param callback the callback object to use
+	 */
+	public void raycast(Vector3 from, Vector3 to, RayResultCallback callback) {
+		lastRayFrom.set(from).sub(0, 5f, 0f);
 
+		dynamicsWorld.rayTest(from, to, callback);
+
+		if (callback.hasHit() && callback instanceof ClosestRayResultCallback) {
+			// Use interpolation to determine the hitpoint where the ray hit the object
+			// This is what bullet does behind the scenes as well
+			lastRayTo.set(from);
+			lastRayTo.lerp(to, callback.getClosestHitFraction());
+		} else {
+			lastRayTo.set(to);
+		}
+	}
 	@Override
 	public void dispose () {
 		for (GameObject obj : instances)
