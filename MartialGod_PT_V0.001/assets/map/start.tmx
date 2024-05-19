@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="64" height="64" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="43">
+ <tileset firstgid="1" source="ptv00-tileset.tsx"/>
+ <layer id="5" name="Map" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJztmQuLxCAMhHtruf//kw9hCyGnSdRobDsfhH2UPiYzpls2He8lRV8AAAAAAAAAAAAAAADg0fwI9Vbe0APJ97trt2jT9N1Nv1Wzd0VSu6YkbHuCbs4q/bux0v9I0kD16NxFd2aV7l3zMeI9rbPwXW3t8O18v5X0+M5fc52H7qGUI8u5Z2O5lhH9Pf1ZnYvWHFzve/XvthY42v2vV79lpq7uBT2Hdu2j+neY/RxLj685fxbe83qC/pIurt9DozZfVvah5ufnWx6e9+wXBdWvZb63J6V90vG/97P4NFRiny2+Wo9LM8+3RyGtf6vflwZpbdG+cv1R1O59ko9atkv9Kh2jdOzZtGRf8rG18n6/pKLmXU03zb51Ddd+30lZoPmJxDLXW58bS9pL+d7Fe2tuvct6v/CaB1qWpfPXfBzRvevsm11Uf/T613i7fo6n/p3w0mV5nrmb5xnP7EfNvdlYnmHv6L0n0A8AAAD4sfo/xJ3I2v8AONkIGA==
+  </data>
+ </layer>
+ <objectgroup id="2" name="Objects">
+  <object id="3" x="1536" y="1824">
+   <polygon points="0,0 0,-1207.88 128,-1207.88 128,0"/>
+  </object>
+  <object id="12" x="320" y="640">
+   <polygon points="0,0 1312,0 1312,-128 0,-128"/>
+  </object>
+  <object id="14" x="512" y="640">
+   <polygon points="0,0 0,1088 -160,1088 -160,0"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="3" name="Spawns">
+  <object id="1" name="PlayerSpawn" x="1030" y="1534">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="EnemySpawns">
+  <object id="2" name="Boss" x="1011.64" y="1034.91">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="8" name="BossPositions">
+  <object id="38" name="A5" x="1065.33" y="1074">
+   <point/>
+  </object>
+  <object id="39" name="A4" x="1189.33" y="866">
+   <point/>
+  </object>
+  <object id="40" name="A3" x="903.333" y="761.333">
+   <point/>
+  </object>
+  <object id="41" name="A2" x="1436" y="910">
+   <point/>
+  </object>
+  <object id="42" name="A1" x="780" y="950">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="BulletsA">
+  <object id="4" name="B8" x="208" y="336">
+   <point/>
+  </object>
+  <object id="5" name="B7" x="1068" y="276">
+   <point/>
+  </object>
+  <object id="6" name="B6" x="1800" y="320">
+   <point/>
+  </object>
+  <object id="7" name="B5" x="1936" y="808">
+   <point/>
+  </object>
+  <object id="8" name="B4" x="1952" y="1876">
+   <point/>
+  </object>
+  <object id="9" name="B3" x="1176" y="1968">
+   <point/>
+  </object>
+  <object id="10" name="B2" x="264" y="1928">
+   <point/>
+  </object>
+  <object id="11" name="B1" x="116" y="976">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="BulletsB">
+  <object id="15" x="690.909" y="1351.52">
+   <point/>
+  </object>
+  <object id="16" x="800" y="1318.18">
+   <point/>
+  </object>
+  <object id="17" x="985.515" y="1280.06">
+   <point/>
+  </object>
+  <object id="18" x="962.606" y="1154.3">
+   <point/>
+  </object>
+  <object id="19" x="1209.15" y="1266.12">
+   <point/>
+  </object>
+  <object id="20" x="1331.88" y="1340.48">
+   <point/>
+  </object>
+  <object id="21" x="1388.91" y="1021.15">
+   <point/>
+  </object>
+  <object id="22" x="1251.52" y="1100">
+   <point/>
+  </object>
+  <object id="23" x="1197.94" y="971.394">
+   <point/>
+  </object>
+  <object id="24" x="1341.58" y="954.423">
+   <point/>
+  </object>
+  <object id="25" x="1448.48" y="754.545">
+   <point/>
+  </object>
+  <object id="26" x="1271.09" y="810.364">
+   <point/>
+  </object>
+  <object id="27" x="827.273" y="781.818">
+   <point/>
+  </object>
+  <object id="28" x="884.848" y="1087.94">
+   <point/>
+  </object>
+  <object id="29" x="757.818" y="1088.6">
+   <point/>
+  </object>
+  <object id="30" x="678.182" y="1018.06">
+   <point/>
+  </object>
+  <object id="31" x="723.273" y="873.697">
+   <point/>
+  </object>
+  <object id="32" x="895.636" y="988.243">
+   <point/>
+  </object>
+  <object id="33" x="941.545" y="859.667">
+   <point/>
+  </object>
+  <object id="34" x="1061.56" y="916.607">
+   <point/>
+  </object>
+  <object id="35" x="1066.18" y="767.03">
+   <point/>
+  </object>
+  <object id="36" x="1088.06" y="1346.97">
+   <point/>
+  </object>
+  <object id="37" x="1077.7" y="1208">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
