@@ -19,7 +19,7 @@ public class Shuriken implements Disposable {
     public final World world;
 
     public final Body bulletBody;
-    public float speed = 4f;
+    public float speed = 2f;
 
     public Shuriken(Vector2 startPos, Vector2 finalPos, SpriteBatch b, World w){
         this.position = startPos;

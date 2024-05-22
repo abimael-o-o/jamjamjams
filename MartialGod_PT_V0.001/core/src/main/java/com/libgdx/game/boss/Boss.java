@@ -23,7 +23,8 @@ public class Boss {
     private float stateTime; //For animations.
 
     boolean shouldFlip = false;
-    private float attackTimer = 2f;
+    private float bulletATimer = 2f;
+    private float bulletBTimer = 4f;
     private float moveTimer = 10f;
     private boolean isAttacking = false;
     private final Body body;
@@ -35,7 +36,8 @@ public class Boss {
     private final Array<Vector2> bAPos;
     private final Array<Vector2> bBPos;
     private final Array<Vector2> bossPositions;
-    private final Array<Shuriken> bulletsA = new Array<>(8);
+    private final Array<Shuriken> bulletsA = new Array<>();
+    private final Array<Swords> bulletsB = new Array<>();
     Vector2 direction = new Vector2();
     Random random = new Random();
     int posIndex;
@@ -65,18 +67,28 @@ public class Boss {
     }
 
     public void Update(float delta){
-        attackTimer -= delta;
+        bulletATimer -= delta;
+        bulletBTimer -= delta;
         moveTimer -= delta;
         position = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM);
 
-        if (attackTimer <= 0.1f) {
+        if (bulletATimer <= 0.1f) {
             for (Shuriken e : bulletsA) {
                 world.destroyBody(e.bulletBody);
             }
             bulletsA.clear();
+            BulletsAHandle();
+            bulletATimer = 2f;
+        }
 
-            AttackHandler();
-            attackTimer = 2f;
+        if (bulletBTimer <= 0.1f) {
+            for (Swords sw : bulletsB) {
+                world.destroyBody(sw.bulletBody);
+            }
+            bulletsB.clear();
+
+            BulletsBHandle();
+            bulletBTimer = 4f;
         }
 
         //Boss change positions
@@ -97,20 +109,27 @@ public class Boss {
         stateTime += delta * .2f; //Animation speed
     }
 
-    private void AttackHandler() {
+    private void BulletsAHandle() {
         for (int i = 0; i < bAPos.size; i++){
             Shuriken s = new Shuriken(position, bAPos.get(i), batch, world);
             bulletsA.add(s);
         }
+    }
 
-        System.out.println(bulletsA.size);
-
+    private void BulletsBHandle() {
+        for (int i = 0; i < bBPos.size; i++){
+            Swords sw = new Swords(bBPos.get(i), world, batch);
+            bulletsB.add(sw);
+        }
     }
 
     public void Draw(){
         Update(Gdx.graphics.getDeltaTime());
         for (Shuriken sk: bulletsA){
             sk.Draw();
+        }
+        for (Swords sw: bulletsB){
+            sw.Draw();
         }
     }
 

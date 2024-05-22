@@ -5,7 +5,9 @@ import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -62,6 +64,18 @@ public class FirstScreen implements ScreenInterface {
         pointLight = new PointLight(rayHandler, 50, Color.BLACK, 600, 0, 0);
         pointLight.setSoftnessLength(0f);
         pointLight.setXray(false);
+
+        SetCustomCursor();
+    }
+
+    private void SetCustomCursor(){
+        Pixmap pixmap = new Pixmap(Gdx.files.internal("cursor.png"));
+        // Set hotspot to the middle of it (0,0 would be the top-left corner)
+        int xHotspot = 15, yHotspot = 15;
+        Cursor cursor = Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot);
+        pixmap.dispose(); // We don't need the pixmap anymore
+        Gdx.graphics.setCursor(cursor);
+
     }
 
     public void update(){
