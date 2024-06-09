@@ -20,6 +20,8 @@ public class Shuriken implements Disposable {
 
     public final Body bulletBody;
     public float speed = 2f;
+    public float life = 15f;
+    public boolean lifeOver = false;
 
     public Shuriken(Vector2 startPos, Vector2 finalPos, SpriteBatch b, World w){
         this.position = startPos;
@@ -34,12 +36,17 @@ public class Shuriken implements Disposable {
     }
 
     private void Update(float delta){
+        life -= delta;
         position = new Vector2(bulletBody.getPosition().x * PPM, bulletBody.getPosition().y * PPM);
 
         Vector2 direction = finalPosition.cpy().sub(position);
         direction.nor();
         direction.x += direction.x * speed;
         direction.y += direction.y * speed;
+
+        if (life <= 0.01f){
+            lifeOver = true;
+        }
 
         bulletBody.setLinearVelocity(direction); //Move only when in range.
         SpriteHandle();

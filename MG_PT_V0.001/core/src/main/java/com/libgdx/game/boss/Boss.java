@@ -72,11 +72,8 @@ public class Boss {
         moveTimer -= delta;
         position = new Vector2(body.getPosition().x * PPM, body.getPosition().y * PPM);
 
+        //* Timer to create bulletsA *//
         if (bulletATimer <= 0.1f) {
-            for (Shuriken e : bulletsA) {
-                world.destroyBody(e.bulletBody);
-            }
-            bulletsA.clear();
             BulletsAHandle();
             bulletATimer = 2f;
         }
@@ -126,7 +123,13 @@ public class Boss {
     public void Draw(){
         Update(Gdx.graphics.getDeltaTime());
         for (Shuriken sk: bulletsA){
-            sk.Draw();
+            if(sk != null) {
+                sk.Draw();
+                if (sk.lifeOver) {
+                    world.destroyBody(sk.bulletBody);
+                    bulletsA.removeValue(sk, false);
+                }
+            }
         }
         for (Swords sw: bulletsB){
             sw.Draw();
