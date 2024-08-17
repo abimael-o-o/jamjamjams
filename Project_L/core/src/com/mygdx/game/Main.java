@@ -162,28 +162,26 @@ public class Main extends ApplicationAdapter {
 	
 	//* Manual spawning of objects in the world */
 	private void SpawnObjects(){
-		String levelPath = "assets/Level/";
-		@SuppressWarnings("unused")
-		ModelBuilder modelBuilder = new ModelBuilder();
+            String levelPath = "Level/";
 
-		G3dModelLoader g3dLoader = new G3dModelLoader(new JsonReader());
+            G3dModelLoader g3dLoader = new G3dModelLoader(new JsonReader());
 
-        Model planeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "floor.g3dj"));
-        GameObject plane = new GameObject(planeModel, "floor",null,0f, KINEMATIC_FLAG);
+            Model planeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "floor.g3dj"));
+            GameObject plane = new GameObject(planeModel, "floor",null,0f, KINEMATIC_FLAG);
 
-		Model treeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "tree.g3dj"));
-		GameObject tree = new GameObject(treeModel, "tree",null,0f, KINEMATIC_FLAG);
+            Model treeModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "tree.g3dj"));
+            GameObject tree = new GameObject(treeModel, "tree",null,0f, KINEMATIC_FLAG);
 
 
-		Model columnModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "column.g3dj"));
-		GameObject column = new GameObject(columnModel, "column",null,0f, KINEMATIC_FLAG);
+            Model columnModel = g3dLoader.loadModel(Gdx.files.internal(levelPath + "column.g3dj"));
+            GameObject column = new GameObject(columnModel, "column",null,0f, KINEMATIC_FLAG);
 
-		instances.add(plane);
-		instances.add(tree);
-		instances.add(column);
-		dynamicsWorld.addRigidBody(plane.body);
-		dynamicsWorld.addRigidBody(tree.body);
-		dynamicsWorld.addRigidBody(column.body);
+            instances.add(plane);
+            instances.add(tree);
+            instances.add(column);
+            dynamicsWorld.addRigidBody(plane.body);
+            dynamicsWorld.addRigidBody(tree.body);
+            dynamicsWorld.addRigidBody(column.body);
 	}
 	/**
 	 * Perform a raycast in the physics world.

@@ -49,7 +49,7 @@ public class Player extends InputAdapter{
         this.mainPhysicsSystem = mps;
         @SuppressWarnings("unused")
         ModelBuilder modelBuilder = new ModelBuilder();
-        Model playerModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("assets/Player/Player.g3dj"));
+        Model playerModel = new G3dModelLoader(new JsonReader()).loadModel(Gdx.files.internal("Player/Player.g3dj"));
         playerObject = new GameObject(playerModel, "Player", new btSphereShape(1f), 2f, 0);
         playerObject.body.setAngularFactor(Vector3.Y);
         playerObject.body.setDamping(0.75f, 0.99f);
